@@ -47,7 +47,7 @@ module OmniAuth
 
       def raw_info
         access_token.client.site = "https://api.stackexchange.com"
-        @raw_info ||= access_token.get('/2.0/me', :params => { 'site' => 'stackoverflow', 'access_token' => access_token.token, 'key' => session['oauth_key'] }).parsed["items"].first || {}
+        @raw_info ||= access_token.get('/2.0/me', :params => { 'site' => 'stackoverflow', 'access_token' => access_token.token, 'key' => @oauth_key }).parsed["items"].first || {}
       end
 
       def build_access_token
@@ -68,8 +68,6 @@ module OmniAuth
       end
 
       def request_phase
-        session['oauth_key'] = authorize_params[:oauth_key]
-
         if signed_request_contains_access_token?
 
           # if we already have an access token, we can just hit the
@@ -90,6 +88,11 @@ module OmniAuth
         end
       end
 
+      def callback_phase
+        @oauth_key = authorize_params[:oauth_key]
+
+        super
+      end
       # NOTE if we're using code from the signed request
       # then FB sets the redirect_uri to '' during the authorize
       # phase + it must match during the access_token phase:
