@@ -14,7 +14,8 @@ module OmniAuth
 
       option :client_options, {
         :site => 'https://stackexchange.com',
-        :token_url => '/oauth/access_token'
+        :token_url => '/oauth/access_token',
+        :authorize_url => '/oauth'
       }
 
       option :token_params, {
